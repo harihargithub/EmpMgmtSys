@@ -4,89 +4,82 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.RestController;
 import com.abj.EmpMgmtSys.model.Employee;
 import com.abj.EmpMgmtSys.service.EmployeeService;
+import com.abj.EmpMgmtSys.util.JwtBlacklist;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Controller
+@CrossOrigin(origins = "http://localhost:5173")
+@RestController
 @RequestMapping("/employees")
 public class EmployeeController {
+
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Autowired
 	private EmployeeService employeeService;
 
-	@RequestMapping("/list")
-	public String listEmployees(Model model) {
-		Set<Employee> employees = this.employeeService.fetchAll();
-		model.addAttribute("employees", employees);
-		return "employees/list-employees";
+	@Autowired
+	private JwtBlacklist jwtBlacklist;
+
+	@GetMapping("/list")
+	public ResponseEntity<?> listEmployees(@RequestHeader("Authorization") String token) {
+		if (token != null && token.startsWith("Bearer ")) {
+			token = token.substring(7);
+		}
+
+		logger.info("Token: {}", token); // Log the token
+
+		// Check if the token is in the blacklist
+		if (jwtBlacklist.contains(token)) {
+			// If the token is in the blacklist, reject the request
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is blacklisted");
+		}
+
+		// If the token is not in the blacklist, continue with the request
+		return ResponseEntity.ok(this.employeeService.fetchAll());
 	}
 
 	@PostMapping("/save")
-	public String saveEmployee(@ModelAttribute("employee") Employee employee) {
+	public Employee saveEmployee(@ModelAttribute("employee") Employee employee) {
 		this.employeeService.saveEmployee(employee);
-		return "redirect:/employees/list";
+		return employee;
 	}
 
-	@RequestMapping("/delete")
-	public String deleteEmployeeById(@RequestParam("id") long employeeId) {
+	@PostMapping("/delete")
+	public void deleteEmployeeById(@RequestParam("id") long employeeId) {
 		this.employeeService.deleteEmployeeById(employeeId);
-		return "redirect:/employees/list";
-	}
-
-	@RequestMapping("/form")
-	public String showForm(Model model) {
-		Employee employee = new Employee();
-		model.addAttribute("employee", employee);
-		return "/employees/employee-form";
 	}
 
 	@PostMapping("/showFormForUpdate")
-	public String showFormForUpdate(@RequestParam("id") int id, Model model) {
-
-		// get the employee from the service
-		Employee theEmployee = employeeService.findEmployeeById(id);
-
-		// set employee as a model attribute to pre-populate the form
-		model.addAttribute("employee", theEmployee);
-
-		return "employees/employee-form";
+	public Employee showFormForUpdate(@RequestParam("id") int id) {
+		return employeeService.findEmployeeById(id);
 	}
 
-	@RequestMapping("/search")
-	public String searchEmployees(@RequestParam("keyword") String keyword, Model model) {
-		Set<Employee> employees = employeeService.searchEmployees(keyword);
-		model.addAttribute("employees", employees);
-		return "employees/list-employees";
+	@GetMapping("/search")
+	public Set<Employee> searchEmployees(@RequestParam("keyword") String keyword) {
+		return employeeService.searchEmployees(keyword);
 	}
 
-	/*
-	 * @RequestMapping("/list-sorted") public String listEmployeesSorted(Model
-	 * model) { List<Employee> employees =
-	 * employeeService.getAllEmployeesSortedByFirstName();
-	 * model.addAttribute("employees", employees); return
-	 * "employees/list-employees"; }
-	 */
-	
-	@RequestMapping("/list-sorted")
-	public String listEmployeesSorted(@RequestParam(value = "sortOrder", defaultValue = "asc") String sortOrder, Model model) {
-	    List<Employee> employees;
-	    
-	    if ("desc".equals(sortOrder)) {
-	        employees = employeeService.getAllEmployeesSortedByFirstNameDesc();
-	    } else {
-	        employees = employeeService.getAllEmployeesSortedByFirstName();
-	    }
-	    
-	    model.addAttribute("employees", employees);
-	    return "employees/list-employees";
+	@GetMapping("/list-sorted")
+	public List<Employee> listEmployeesSorted(
+			@RequestParam(value = "sortOrder", defaultValue = "asc") String sortOrder) {
+		if ("desc".equals(sortOrder)) {
+			return employeeService.getAllEmployeesSortedByFirstNameDesc();
+		} else {
+			return employeeService.getAllEmployeesSortedByFirstName();
+		}
 	}
-
 
 }

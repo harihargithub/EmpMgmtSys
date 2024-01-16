@@ -1,0 +1,121 @@
+import  { useState, useEffect } from 'react';
+import axios from 'axios';
+import { GridComponent, ColumnsDirective, ColumnDirective, Inject, Page, Edit, Toolbar, CommandColumn } from '@syncfusion/ej2-react-grids';
+
+function EmployeeList() {
+  const [employees, setEmployees] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [employeeForm, setEmployeeForm] = useState({});
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
+
+  const getEmployees = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Retrieve the token from local storage
+      console.log('Token:', token); // Log the token
+  
+      const response = await axios.get('/employees/list', {
+        headers: {
+          Authorization: `Bearer ${token}` // Include the token in the request headers
+        }
+      });
+  
+      setEmployees(response.data);
+    } catch (error) {
+      console.error('Error fetching employees', error);
+    }
+  };
+
+  const handleUpdate = (id) => {
+    const employeeToUpdate = employees.find(employee => employee.id === id);
+    setEmployeeForm(employeeToUpdate);
+    setShowForm(true);
+  };
+
+  const submitUpdate = async (id, updatedEmployee) => {
+    try {
+      await axios.put(`/employees/update/${id}`, updatedEmployee);
+      getEmployees();
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error updating employee', error);
+    }
+  };
+
+  const handleDelete = async (employee) => {
+    try {
+      await axios.delete(`/employees/delete?id=${employee.id}`);
+      getEmployees();
+    } catch (error) {
+      console.error('Error deleting employee', error);
+    }
+  };
+
+  const handleSearch = async (keyword) => {
+    try {
+      const response = await axios.get(`/employees/search?keyword=${keyword}`);
+      setEmployees(response.data);
+    } catch (error) {
+      console.error('Error searching employees', error);
+    }
+  };
+
+  return (
+    <div className="container">
+      <h3>Employee Directory</h3>
+      <input type="text" onChange={(e) => handleSearch(e.target.value)} placeholder="Search by name..." />
+      {showForm && (
+        <div>
+          <hr />
+          <p className="h4 mb-4">Update Employee</p>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (employeeForm && 'id' in employeeForm) {
+                submitUpdate(employeeForm.id, employeeForm);
+              }
+            }}
+          >
+            <input type="hidden" value={employeeForm && 'id' in employeeForm ? employeeForm.id : ''} />
+            <input
+              type="text"
+              value={employeeForm && 'FirstName' in employeeForm ? employeeForm.FirstName : ''}
+              onChange={(event) => setEmployeeForm({ ...employeeForm, FirstName: event.target.value })}
+              className="form-control mb-4 col-4"
+              placeholder="First Name"
+            />
+            <input
+              type="text"
+              value={employeeForm && 'LastName' in employeeForm ? employeeForm.LastName : ''}
+              onChange={(event) => setEmployeeForm({ ...employeeForm, LastName: event.target.value })}
+              className="form-control mb-4 col-4"
+              placeholder="Last Name"
+            />
+            <input
+              type="text"
+              value={employeeForm && 'Email' in employeeForm ? employeeForm.Email : ''}
+              onChange={(event) => setEmployeeForm({ ...employeeForm, Email: event.target.value })}
+              className="form-control mb-4 col-4"
+              placeholder="Email"
+            />
+            <button type="submit" className="btn btn-info col-2">Save</button>
+          </form>
+        </div>
+      )}
+      <GridComponent dataSource={employees} allowPaging={true} editSettings={{ allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Dialog' }} toolbar={['Add', 'Edit', 'Delete', 'Update', 'Cancel']} actionComplete={handleUpdate}>
+        <ColumnsDirective>
+          <ColumnDirective field='id' headerText='Employee ID' isPrimaryKey={true} width='130' />
+          <ColumnDirective field='FirstName' headerText='First Name' width='230' />
+          <ColumnDirective field='LastName' headerText='Last Name' width='170' />
+          <ColumnDirective field='Email' headerText='Email' width='230' />
+          <ColumnDirective headerText='Manage Records' commands={[{ type: 'Edit', buttonOption: { cssClass: 'btn btn-info btn-sm', iconCss: ' e-icons e-edit', click: handleUpdate } }, { type: 'Delete', buttonOption: { cssClass: 'btn btn-danger btn-sm', iconCss: ' e-icons e-delete', click: handleDelete } }]} width='150' textAlign='Center' />
+        </ColumnsDirective>
+        <Inject services={[Page, Edit, Toolbar, CommandColumn]} />
+      </GridComponent>
+    </div>
+  );
+}
+
+export default EmployeeList;

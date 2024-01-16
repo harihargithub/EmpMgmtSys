@@ -1,0 +1,421 @@
+package com.abj.EmpMgmtSys.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
+@Configuration
+public class AppConfig {
+
+	@Autowired
+	private UserDetailsService userDetailsService;
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		final CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Allow frontend origin
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+		configuration.setAllowCredentials(true);
+		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public AuthenticationManager customAuthenticationManager() {
+		return new ProviderManager(Arrays.asList(authenticationProvider()));
+	}
+
+	@Bean
+	public DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(passwordEncoder());
+		return authProvider;
+	}
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		SimpleUrlLogoutSuccessHandler logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler();
+		logoutSuccessHandler.setAlwaysUseDefaultTargetUrl(true);
+		logoutSuccessHandler.setDefaultTargetUrl("http://localhost:5173/loginPage?logout");
+
+		http
+				.authenticationProvider(authenticationProvider())
+				.cors().configurationSource(corsConfigurationSource()).and()
+				.csrf().disable()
+				.headers().frameOptions().disable()
+				.and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.authorizeRequests()
+				.antMatchers("/login", "/loginPage*").permitAll() // Allow unauthenticated access to /login and
+																	// /loginPage endpoints
+				.antMatchers("/authenticate/**").permitAll() // Only allow unauthenticated access to the login endpoint
+				.antMatchers("/employees/list", "/employees/form").hasAnyRole("USER", "ADMIN") // Only allow users with
+																								// USER or ADMIN roles
+																								// to access these
+																								// endpoints
+				.antMatchers(HttpMethod.POST, "/employees/save").hasRole("ADMIN") // Only allow users with ADMIN role to
+																					// access this endpoint
+				.antMatchers("/employees/delete").hasRole("SUPER_ADMIN") // Only allow users with SUPER_ADMIN role to
+																			// access this endpoint
+				.antMatchers("/logout").authenticated() // Ensure authenticated access to /logout
+				.anyRequest().authenticated() // Require authentication for all other endpoints
+				.and()
+				.logout(logout -> logout
+						.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+						.logoutSuccessHandler(logoutSuccessHandler)
+						.logoutSuccessUrl("/"))
+				.httpBasic();
+		return http.build();
+	}
+}
+
+package com.abj.EmpMgmtSys.controller;
+
+import com.abj.EmpMgmtSys.model.AuthenticationRequest;
+import com.abj.EmpMgmtSys.service.DomainUserDetailsService;
+import com.abj.EmpMgmtSys.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import com.abj.EmpMgmtSys.util.JwtBlacklist;
+import java.util.Collections;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+
+@RestController
+public class AuthenticationController {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private JwtBlacklist jwtBlacklist;
+
+    @Autowired
+    private DomainUserDetailsService userDetailsService;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
+            throws Exception {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+                            authenticationRequest.getPassword()));
+        } catch (BadCredentialsException e) {
+            throw new Exception("Incorrect username or password", e);
+        }
+
+        final UserDetails userDetails = userDetailsService
+                .loadUserByUsername(authenticationRequest.getUsername());
+
+        final String jwt = jwtUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(Collections.singletonMap("token", jwt));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token, HttpServletRequest request) {
+        System.out.println("Logout endpoint hit with method: " + request.getMethod() + " and token: " + token);
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        jwtBlacklist.add(token);
+        return ResponseEntity.ok("Logout successful");
+    }
+
+    @GetMapping("/loginPage")
+    public ResponseEntity<?> loginPage(@RequestParam(required = false) String logout) {
+        if (logout != null) {
+            return ResponseEntity.ok("Logout successful");
+        } else {
+            return ResponseEntity.ok("Login page");
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "redirect:/loginPage";
+    }
+}
+
+package com.abj.EmpMgmtSys.controller;
+
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import com.abj.EmpMgmtSys.model.Employee;
+import com.abj.EmpMgmtSys.service.EmployeeService;
+import com.abj.EmpMgmtSys.util.JwtBlacklist;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@CrossOrigin(origins = "http://localhost:5173")
+@RestController
+@RequestMapping("/employees")
+public class EmployeeController {
+
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
+	@Autowired
+	private EmployeeService employeeService;
+
+	@Autowired
+	private JwtBlacklist jwtBlacklist;
+
+	@GetMapping("/list")
+	public ResponseEntity<?> listEmployees(@RequestHeader("Authorization") String token) {
+		if (token != null && token.startsWith("Bearer ")) {
+			token = token.substring(7);
+		}
+
+		logger.info("Token: {}", token); // Log the token
+
+		// Check if the token is in the blacklist
+		if (jwtBlacklist.contains(token)) {
+			// If the token is in the blacklist, reject the request
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is blacklisted");
+		}
+
+		// If the token is not in the blacklist, continue with the request
+		return ResponseEntity.ok(this.employeeService.fetchAll());
+	}
+
+	@PostMapping("/save")
+	public Employee saveEmployee(@ModelAttribute("employee") Employee employee) {
+		this.employeeService.saveEmployee(employee);
+		return employee;
+	}
+
+	@PostMapping("/delete")
+	public void deleteEmployeeById(@RequestParam("id") long employeeId) {
+		this.employeeService.deleteEmployeeById(employeeId);
+	}
+
+	@PostMapping("/showFormForUpdate")
+	public Employee showFormForUpdate(@RequestParam("id") int id) {
+		return employeeService.findEmployeeById(id);
+	}
+
+	@GetMapping("/search")
+	public Set<Employee> searchEmployees(@RequestParam("keyword") String keyword) {
+		return employeeService.searchEmployees(keyword);
+	}
+
+	@GetMapping("/list-sorted")
+	public List<Employee> listEmployeesSorted(
+			@RequestParam(value = "sortOrder", defaultValue = "asc") String sortOrder) {
+		if ("desc".equals(sortOrder)) {
+			return employeeService.getAllEmployeesSortedByFirstNameDesc();
+		} else {
+			return employeeService.getAllEmployeesSortedByFirstName();
+		}
+	}
+
+}
+
+package com.abj.EmpMgmtSys.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.abj.EmpMgmtSys.service.DomainUserDetailsService;
+import org.springframework.lang.NonNull;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Component
+public class JwtRequestFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private DomainUserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private JwtBlacklist jwtBlacklist;
+
+    @Override
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain chain)
+            throws ServletException, IOException {
+        final String authorizationHeader = request.getHeader("Authorization");
+
+        String username = null;
+        String jwt = null;
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            jwt = authorizationHeader.substring(7);
+            username = jwtUtil.extractUsername(jwt);
+        }
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+            if (jwtBlacklist.contains(jwt)) {
+                throw new ServletException("Token has been invalidated");
+            }
+
+            if (jwtUtil.validateToken(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }
+        }
+        chain.doFilter(request, response);
+    }
+}
+
+package com.abj.EmpMgmtSys.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.abj.EmpMgmtSys.model.Employee;
+import com.abj.EmpMgmtSys.model.Role;
+import com.abj.EmpMgmtSys.model.User;
+import com.abj.EmpMgmtSys.repository.EmployeeJpaRepository;
+import com.abj.EmpMgmtSys.repository.UserJpaRepository;
+
+@Configuration
+public class BootstrapAppData {
+
+	@Autowired
+	private UserJpaRepository userJpaRepository;
+
+	@Autowired
+	private EmployeeJpaRepository employeeRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@EventListener(ApplicationReadyEvent.class)
+	@Transactional
+	public void loadUsers(ApplicationReadyEvent event) {
+
+		// addding users and roles
+
+		User kiran = new User("kiran", this.passwordEncoder.encode("welcome"));
+		User vinay = new User("vinay", this.passwordEncoder.encode("welcome"));
+		User ramesh = new User("ramesh", this.passwordEncoder.encode("welcome"));
+
+		Role userRole = new Role("ROLE_USER");
+		Role adminRole = new Role("ROLE_ADMIN");
+		Role superAdminRole = new Role("ROLE_SUPER_ADMIN");
+
+		kiran.addRole(userRole);
+
+		vinay.addRole(userRole);
+		vinay.addRole(adminRole);
+
+		ramesh.addRole(userRole);
+		ramesh.addRole(adminRole);
+		ramesh.addRole(superAdminRole);
+
+		this.userJpaRepository.save(kiran);
+		this.userJpaRepository.save(vinay);
+		this.userJpaRepository.save(ramesh);
+	}
+
+	@EventListener(ApplicationReadyEvent.class)
+	@Transactional
+	public void loadEmployees(ApplicationReadyEvent event) {
+
+		Employee emp1 = new Employee();
+		emp1.setFirstName("Johny");
+		emp1.setLastName("Meir");
+		emp1.setEmail("it@gg.com");
+
+		Employee emp2 = new Employee();
+		emp2.setFirstName("Janey");
+		emp2.setLastName("Mithow");
+		emp2.setEmail("hr@ah.in");
+
+		Employee emp3 = new Employee();
+		emp3.setFirstName("Michsael");
+		emp3.setLastName("Socher");
+		emp3.setEmail("sales@abj.edu");
+
+		Employee emp4 = new Employee();
+		emp4.setFirstName("Wilson");
+		emp4.setLastName("Finao");
+		emp4.setEmail("fin@co.in");
+
+		this.employeeRepository.save(emp1);
+		this.employeeRepository.save(emp2);
+		this.employeeRepository.save(emp3);
+		this.employeeRepository.save(emp4);
+	}
+}
+

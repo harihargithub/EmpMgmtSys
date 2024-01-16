@@ -1,0 +1,837 @@
+PS C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmployeeManagmentSystem> conda deactivate if (base) xx
+
+only following App works not above:
+PS C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmpMgmtSys> conda deactivate if (base)
+ -> mvn clean install 
+  -> mvn spring-boot:run
+
+  http://localhost:8080/  -  ramesh & welcome
+  http://localhost:8080/employees/list
+
+  http://localhost:8080/h2-console  -  sph & sph
+
+  cd C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmpMgmtSys_sboot_react>npx create-vite empvitereact --template react
+    cd empvitereact
+    npm install
+    npm run dev
+
+    cd C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmpMgmtSys_sboot_react>move EmployeeForm.jsx .\empvitereact\src\
+
+     EmpMgmtSys_sboot_react\empvitereact 
+
+  If you've created a `EmployeeForm.jsx` file under `src\main\resources\templates\employees`, it's important to note that Spring Boot won't be able to serve this file directly as it does with Thymeleaf templates. JSX files need to be transpiled to JavaScript and served as static files or used in a JavaScript (or TypeScript) application.
+
+To use this `EmployeeForm.jsx` in your application, you would need to set up a build process to transpile the JSX to JavaScript. This could be done using a tool like Babel and Webpack. Once the JSX is transpiled to JavaScript, you can include it in your HTML file using a `<script>` tag.
+
+Here's an example of how you might include the transpiled `EmployeeForm.js` in your HTML:
+
+```html
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <title>Save employee</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Include the transpiled EmployeeForm.js -->
+    <script src="path/to/EmployeeForm.js"></script>
+</body>
+</html>
+```
+
+In this example, the `EmployeeForm` component would be rendered inside the `<div id="root"></div>` element. You would need to modify your `EmployeeForm.jsx` to render the component to this element. Here's how you might do this:
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+// ... EmployeeForm component definition ...
+
+ReactDOM.render(<EmployeeForm />, document.getElementById('root'));
+```
+
+Please note that this is a simplified example and setting up a build process for JSX files can be complex. If you're not familiar with this process, you might want to consider using a tool like Create React App to set up your React application.
+
+Yes, you can definitely use Vite to create a new React application. Vite is a modern front-end build tool that provides a faster and leaner development experience for modern web projects. It is created by Evan You, the author of Vue.js.
+
+Here are the steps to create a new React application using Vite:
+
+1. First, install create-vite if you haven't done so already. You can do this by running the following command in your terminal:
+
+```bash
+npm init @vitejs/app
+```
+
+2. You'll be prompted to choose a project name and a template. For the template, you can choose `react`.
+
+3. Once the initialization process is complete, navigate into your new project folder:
+
+```bash
+cd <project-name>
+```
+
+4. Install the project dependencies:
+
+```bash
+npm install
+```
+
+5. Now, you can start the development server:
+
+```bash
+npm run dev
+```
+
+This will start the Vite development server, and you can begin working on your React application. Vite comes with built-in JSX support, so you don't need to set up a separate build process for JSX files.
+
+
+Yes, that's correct. Your Spring Boot application (backend) will remain in the `EmpMgmtSys_sboot_react` directory, and you can create your new Vite React application (frontend) in a subdirectory, like `empvitereact`.
+
+This way, your backend and frontend are in separate directories, which can make your development process more manageable. You can develop your frontend and backend separately, and they can communicate with each other through HTTP requests.
+
+Here's how you can create your Vite React application in the `empvitereact` subdirectory:
+
+1. Navigate to your Spring Boot project directory:
+
+```bash
+cd C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmpMgmtSys_sboot_react
+```
+
+2. Create a new Vite React application in the `empvitereact` subdirectory:
+
+```bash
+npx create-vite empvitereact --template react
+```
+
+3. Navigate to the `empvitereact` subdirectory:
+
+```bash
+cd empvitereact
+```
+
+4. Install the project dependencies:
+
+```bash
+npm install
+```
+
+5. Start the development server:
+
+```bash
+npm run dev
+```
+
+Now, you can start developing your frontend in the `empvitereact` directory and your backend in the `EmpMgmtSys_sboot_react` directory.
+
+Yes, you're correct. If you're planning to use the `EmployeeForm.jsx` component in your new Vite React application, you should move it to the new project directory.
+
+However, you'll need to ensure that the component's dependencies are also installed in the new project. For example, if `EmployeeForm.jsx` uses any third-party libraries that were installed in the original project, you'll need to install those libraries in the new project as well.
+
+Here's how you can move the file:
+
+1. Navigate to the directory of `EmployeeForm.jsx`:
+
+```bash
+cd C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmpMgmtSys_sboot_react
+```
+
+2. Move `EmployeeForm.jsx` to the `empvitereact` directory:
+
+```bash
+move EmployeeForm.jsx .\empvitereact\src\
+```
+
+Remember to replace `.\empvitereact\src\` with the actual path where you want to place the component in your Vite project. Typically, it would be inside the `src` directory.
+
+After moving the file, you can import it in your Vite project like this:
+
+```javascript
+import EmployeeForm from './EmployeeForm';
+```
+
+Make sure the path in the import statement matches the location where you placed `EmployeeForm.jsx`.
+
+
+Yes, this is a common and recommended approach for developing full-stack applications. Your Spring Boot backend is running on `http://localhost:8080/` and your Vite React frontend is running on `http://localhost:5173/`. 
+
+This setup allows you to develop your frontend and backend separately, which can make your development process more manageable. The frontend and backend communicate with each other through HTTP requests. 
+
+However, you might run into issues with CORS (Cross-Origin Resource Sharing) because your frontend and backend are running on different origins. To resolve this, you can add a proxy to your frontend development server that forwards requests to your backend server, or you can configure your backend server to accept requests from your frontend server origin.
+
+In a production environment, you would typically serve your frontend static files (the build output of your React application) from your backend server, or from a dedicated static file server. This way, both your frontend and backend can be accessed from the same origin, avoiding CORS issues.
+
+It seems like you want to replace your Thymeleaf templates with a React frontend. Here are the steps you need to follow:
+
+1. **Move your React project to the desired location**: You've mentioned that you want your frontend to be located at `C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmpMgmtSys_sboot_react\empvitereact`. If it's not already there, you should move your React project to this location.
+
+2. **Replace Thymeleaf templates with React components**: You've already started this process by creating a `EmployeeForm` React component. You'll need to create similar React components for all your Thymeleaf templates.
+
+3. **Setup a proxy for API calls**: In your React project, you can setup a proxy to forward API calls to your Spring Boot backend. This can be done by adding a `proxy` field to your `package.json` file like this:
+
+```json
+"proxy": "http://localhost:8080"
+```
+
+4. **Update your Spring Boot application**: You'll need to update your Spring Boot application to serve the static files generated by your React application. This can be done by moving the build output of your React application (usually located in the `build` or `dist` directory) to the `static` directory of your Spring Boot application.
+
+5. **Handle CORS**: Since your frontend and backend are running on different origins, you'll need to handle CORS (Cross-Origin Resource Sharing) in your Spring Boot application. This can be done by adding a CORS configuration to your Spring Boot application.
+
+6. **Update your API endpoints**: You'll need to update your Spring Boot application to return JSON data instead of Thymeleaf views. This can be done by using `@RestController` instead of `@Controller` and returning data directly from your controller methods.
+
+Remember, this is a high-level overview of the steps you need to follow. Each step involves a fair amount of work and might require additional configuration based on your specific needs.
+
+Yes, you are correct. The two HTML files you mentioned, `employee-form.html` and `list-employees.html`, are Thymeleaf templates that are used to render the frontend of your application. 
+
+If you want to replace your Thymeleaf frontend with a React frontend, you would need to create equivalent React components for these two templates. 
+
+In your React project at `\EmpMgmtSys_sboot_react\empvitereact`, you would create two React components, let's say `EmployeeForm.jsx` and `EmployeeList.jsx`. 
+
+`EmployeeForm.jsx` would be equivalent to `employee-form.html` and `EmployeeList.jsx` would be equivalent to `list-employees.html`. These React components would make API calls to your Spring Boot backend to fetch and update data.
+
+So, you are on the right track. You would need to create React components that correspond to your Thymeleaf templates.
+
+Sure, here's a basic equivalent of your `list-employees.html` in a React component named `EmployeeList.jsx`. This component assumes that you have a function `getEmployees` that fetches the list of employees from your backend, and functions `handleUpdate` and `handleDelete` for updating and deleting employees.
+
+```jsx
+import React, { useState, useEffect } from 'react';
+
+function EmployeeList() {
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    getEmployees().then(data => setEmployees(data));
+  }, []);
+
+  return (
+    <div className="container">
+      <h3>Employee Directory</h3>
+
+      <form action="/employees/search" method="GET">
+        <input type="text" name="keyword" placeholder="Search by name..." />
+        <button type="submit">Search</button>
+      </form>
+
+      <table className="table table-bordered table-striped">
+        <thead className="thead-dark">
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email Id</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.map(employee => (
+            <tr key={employee.id}>
+              <td>{employee.firstName}</td>
+              <td>{employee.lastName}</td>
+              <td>{employee.email}</td>
+              <td>
+                <div className="row">
+                  <div className="col-small">
+                    <button onClick={() => handleUpdate(employee.id)} className="btn btn-info btn-sm ml-3 mr-1">Update</button>
+                  </div>
+                  <div className="col-small">
+                    <button onClick={() => handleDelete(employee.id)} className="btn btn-danger btn-sm">Delete</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="row">
+        <div className="col-small">
+          <button className="btn btn-info btn-sm ml-3 mr-1">Add</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default EmployeeList;
+```
+
+Please note that you'll need to implement the `getEmployees`, `handleUpdate`, and `handleDelete` functions, and adjust the code to fit your application's structure and styling. This code also assumes that you're using Bootstrap for styling, as in your original HTML.
+
+Sure, I can provide you with some basic implementations of these functions. 
+
+Assuming you're using the `fetch` API to make HTTP requests and your backend API endpoints are `/api/employees` for fetching the list of employees, `/api/employees/update` for updating an employee, and `/api/employees/delete` for deleting an employee, here's how you could implement these functions:
+
+```jsx
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+function EmployeeList() {
+  const [employees, setEmployees] = useState([]);
+  const [employeeForm, setEmployeeForm] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
+
+  const getEmployees = async () => {
+    try {
+      const response = await axios.get('/employees/list');
+      setEmployees(response.data);
+    } catch (error) {
+      console.error('Error fetching employees', error);
+    }
+  };
+
+  const handleUpdate = (id) => {
+    const employeeToUpdate = employees.find(employee => employee.id === id);
+    setEmployeeForm(employeeToUpdate);
+    setShowForm(true);
+  };
+
+  const submitUpdate = async (id, updatedEmployee) => {
+    try {
+      await axios.put(`/employees/update/${id}`, updatedEmployee);
+      getEmployees();
+    } catch (error) {
+      console.error('Error updating employee', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.get(`/employees/delete?id=${id}`);
+      getEmployees();
+    } catch (error) {
+      console.error('Error deleting employee', error);
+    }
+  };
+
+  return (
+    <div className="container">
+      <h3>Employee Directory</h3>
+
+        {showForm && (
+            <div>
+                <hr />
+                <p className="h4 mb-4">Update Employee</p>
+                <form
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    submitUpdate(employeeForm.id, employeeForm);
+                    setShowForm(false);
+                }}
+                >
+                <input type="hidden" value={employeeForm.id} />
+    
+                <input
+                    type="text"
+                    value={employeeForm.firstName}
+                    onChange={(event) => setEmployeeForm({ ...employeeForm, firstName: event.target.value })}
+                    className="form-control mb-4 col-4"
+                    placeholder="First Name"
+                />
+    
+                <input
+                    type="text"
+                    value={employeeForm.lastName}
+                    onChange={(event) => setEmployeeForm({ ...employeeForm, lastName: event.target.value })}
+                    className="form-control mb-4 col-4"
+                    placeholder="Last Name"
+                />
+    
+                <input
+                    type="text"
+                    value={employeeForm.email}
+                    onChange={(event) => setEmployeeForm({ ...employeeForm, email: event.target.value })}
+                    className="form-control mb-4 col-4"
+                    placeholder="Email"
+                />
+    
+                <button type="submit" className="btn btn-info col-2">Save</button>
+                </form>
+            </div>
+            )}
+
+      <form action="/employees/search" method="GET">
+        <input type="text" name="keyword" placeholder="Search by name..." />
+        <button type="submit">Search</button>
+      </form>
+
+      <table className="table table-bordered table-striped">
+        <thead className="thead-dark">
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email Id</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.map(employee => (
+            <tr key={employee.id}>
+              <td>{employee.firstName}</td>
+              <td>{employee.lastName}</td>
+              <td>{employee.email}</td>
+              <td>
+                <div className="row">
+                  <div className="col-small">
+                    <button onClick={() => handleUpdate(employee.id)} className="btn btn-info btn-sm ml-3 mr-1">Update</button>
+                  </div>
+                  <div className="col-small">
+                    <button onClick={() => handleDelete(employee.id)} className="btn btn-danger btn-sm">Delete</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="row">
+        <div className="col-small">
+          <button className="btn btn-info btn-sm ml-3 mr-1">Add</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default EmployeeList;
+
+
+// Implementation of `getEmployees`, `handleUpdate`, and `handleDelete` functions for EmployeeList.jsx adjusting the code to fit the application's structure done.
+// Need to provide input to handleUpdate function - dpme
+
+// Bootstrap for styling, as in original list-employees.html to be done.
+// Handling errors, add authentication, add pagination & adust the API endpoints to be done.
+
+
+Yes, your code looks correct. You've implemented the `handleUpdate` function to set the selected employee to the form's state and show the form. You've also implemented the `submitUpdate` function to send the updated employee details to the server when the form is submitted.
+
+In the form, you've used controlled components for the input fields. This means that the input fields' values are controlled by the component's state. When the input fields' values change, the state is updated, and when the state changes, the input fields' values are updated.
+
+You've also used the spread operator (`...`) to create a new object with the updated employee details. This is necessary because state should not be mutated directly in React.
+
+Finally, you've used the `map` function to render a table row for each employee in the `employees` array. Each table row includes an Update button and a Delete button. When the Update button is clicked, the `handleUpdate` function is called with the employee's ID. When the Delete button is clicked, the `handleDelete` function is called with the employee's ID.
+
+So, overall, your code looks correct and well-structured. Good job!
+
+Sure, here are some general guidelines on how you can approach these tasks:
+
+1. **Bootstrap for styling**: You can use Bootstrap in your React application by installing it and importing it into your project. You can install it using npm (`npm install bootstrap`) or yarn (`yarn add bootstrap`), and then import it in your `index.js` file (`import 'bootstrap/dist/css/bootstrap.min.css';`). Then, you can use Bootstrap classes in your JSX code for styling.
+
+2. **Handling errors**: You're already catching errors in your async functions with try/catch blocks, which is good. You could enhance this by displaying the error messages to the user. You could create a new state variable for the error message and display it in your component.
+
+3. **Add authentication**: This is a broad topic and the implementation depends on your specific requirements. In general, you would need to implement a login system where users can enter their credentials. These credentials are then sent to the server, which returns a token if the credentials are correct. This token is stored in the client and sent with each request to the server. The server verifies the token and returns the requested data if the token is valid.
+
+4. **Add pagination**: You can add pagination by modifying your `getEmployees` function to accept parameters for the current page and the number of items per page. These parameters are sent to the server, which returns the corresponding items. In your component, you would then render buttons for each page and when a button is clicked, you call `getEmployees` with the corresponding page number.
+
+5. **Adjust the API endpoints**: The API endpoints are currently hardcoded in your axios calls. You could make your application more flexible by storing the base URL of your API in a separate file or in an environment variable. You would then concatenate this base URL with the specific endpoint for each request.
+
+Here's an example of how you could adjust your `getEmployees` function for pagination:
+
+```jsx
+const getEmployees = async (page = 1, itemsPerPage = 10) => {
+  try {
+    const response = await axios.get(`/employees/list?page=${page}&itemsPerPage=${itemsPerPage}`);
+    setEmployees(response.data);
+  } catch (error) {
+    console.error('Error fetching employees', error);
+  }
+};
+```
+
+And here's how you could render buttons for each page:
+
+```jsx
+<div>
+  {[...Array(numberOfPages)].map((_, i) => (
+    <button key={i} onClick={() => getEmployees(i + 1)}>
+      {i + 1}
+    </button>
+  ))}
+</div>
+```
+
+In this code, `numberOfPages` is the total number of pages, which you would typically get from the server.
+
+I Have access to syncfusion and which of it's components can be used here?
+
+Syncfusion provides a wide range of components that can be used in your React application. Here are a few that could be useful in your `EmployeeList` component:
+
+1. **Grid**: Syncfusion's Grid component can be used to display the list of employees. It supports features like sorting, filtering, and pagination out of the box.
+
+2. **Form Components (TextBox, NumericTextBox, MaskedTextBox, etc.)**: These can be used to create the form for updating an employee's details. They provide more features and better styling than the standard HTML input elements.
+
+3. **Dialog**: This can be used to show the form in a modal dialog when the user clicks the Update button.
+
+4. **Button**: Syncfusion's Button component can be used instead of the standard HTML button for better styling and additional features.
+
+5. **Toast**: This can be used to show notifications to the user, for example, when an employee is updated or deleted successfully, or when an error occurs.
+
+Remember to install the necessary Syncfusion packages and import the required CSS in your project. You can refer to the official Syncfusion documentation for more details on how to use these components.
+
+
+
+
+110124 1728 - Following codebase replaced with syncfusion components:
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+function EmployeeList() {
+  const [employees, setEmployees] = useState([]);
+  const [employeeForm, setEmployeeForm] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
+
+  const getEmployees = async () => {
+    try {
+      const response = await axios.get('/employees/list');
+      setEmployees(response.data);
+    } catch (error) {
+      console.error('Error fetching employees', error);
+    }
+  };
+
+  const handleUpdate = (id) => {
+    const employeeToUpdate = employees.find(employee => employee.id === id);
+    setEmployeeForm(employeeToUpdate);
+    setShowForm(true);
+  };
+
+  const submitUpdate = async (id, updatedEmployee) => {
+    try {
+      await axios.put(`/employees/update/${id}`, updatedEmployee);
+      getEmployees();
+    } catch (error) {
+      console.error('Error updating employee', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.get(`/employees/delete?id=${id}`);
+      getEmployees();
+    } catch (error) {
+      console.error('Error deleting employee', error);
+    }
+  };
+
+  return (
+    <div className="container">
+      <h3>Employee Directory</h3>
+
+        {showForm && (
+            <div>
+                <hr />
+                <p className="h4 mb-4">Update Employee</p>
+                <form
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    submitUpdate(employeeForm.id, employeeForm);
+                    setShowForm(false);
+                }}
+                >
+                <input type="hidden" value={employeeForm.id} />
+    
+                <input
+                    type="text"
+                    value={employeeForm.firstName}
+                    onChange={(event) => setEmployeeForm({ ...employeeForm, firstName: event.target.value })}
+                    className="form-control mb-4 col-4"
+                    placeholder="First Name"
+                />
+    
+                <input
+                    type="text"
+                    value={employeeForm.lastName}
+                    onChange={(event) => setEmployeeForm({ ...employeeForm, lastName: event.target.value })}
+                    className="form-control mb-4 col-4"
+                    placeholder="Last Name"
+                />
+    
+                <input
+                    type="text"
+                    value={employeeForm.email}
+                    onChange={(event) => setEmployeeForm({ ...employeeForm, email: event.target.value })}
+                    className="form-control mb-4 col-4"
+                    placeholder="Email"
+                />
+    
+                <button type="submit" className="btn btn-info col-2">Save</button>
+                </form>
+            </div>
+            )}
+
+      <form action="/employees/search" method="GET">
+        <input type="text" name="keyword" placeholder="Search by name..." />
+        <button type="submit">Search</button>
+      </form>
+
+      <table className="table table-bordered table-striped">
+        <thead className="thead-dark">
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email Id</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.map(employee => (
+            <tr key={employee.id}>
+              <td>{employee.firstName}</td>
+              <td>{employee.lastName}</td>
+              <td>{employee.email}</td>
+              <td>
+                <div className="row">
+                  <div className="col-small">
+                    <button onClick={() => handleUpdate(employee.id)} className="btn btn-info btn-sm ml-3 mr-1">Update</button>
+                  </div>
+                  <div className="col-small">
+                    <button onClick={() => handleDelete(employee.id)} className="btn btn-danger btn-sm">Delete</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="row">
+        <div className="col-small">
+          <button className="btn btn-info btn-sm ml-3 mr-1">Add</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default EmployeeList;
+
+
+// Implementation of `getEmployees`, `handleUpdate`, and `handleDelete` functions for EmployeeList.jsx adjusting the code to fit the application's structure done.
+// Need to provide input to handleUpdate function - dpme
+
+// Bootstrap for styling, as in original list-employees.html to be done.
+// Handling errors, add authentication, add pagination & adust the API endpoints to be done.
+
+Sure, I can help you refactor this code to use the Syncfusion Grid component. Here's how you can do it:
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { GridComponent, ColumnsDirective, ColumnDirective, Inject, Page, Edit, Toolbar, CommandColumn } from '@syncfusion/ej2-react-grids';
+
+function EmployeeList() {
+  const [employees, setEmployees] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [employeeForm, setEmployeeForm] = useState({});
+
+  useEffect(() => {
+    getEmployees();
+  }, []);
+
+  const getEmployees = async () => {
+    try {
+      const response = await axios.get('/employees/list');
+      setEmployees(response.data);
+    } catch (error) {
+      console.error('Error fetching employees', error);
+    }
+  };
+
+  const handleUpdate = (id) => {
+    const employeeToUpdate = employees.find(employee => employee.EmployeeID === id);
+    setEmployeeForm(employeeToUpdate);
+    setShowForm(true);
+  };
+
+  const submitUpdate = async (id, updatedEmployee) => {
+    try {
+      await axios.put(`/employees/update/${id}`, updatedEmployee);
+      getEmployees();
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error updating employee', error);
+    }
+  };
+
+  const handleDelete = async (employee) => {
+    try {
+      await axios.get(`/employees/delete?id=${employee.EmployeeID}`);
+      getEmployees();
+    } catch (error) {
+      console.error('Error deleting employee', error);
+    }
+  };
+
+  const handleSearch = async (keyword) => {
+    try {
+      const response = await axios.get(`/employees/search?keyword=${keyword}`);
+      setEmployees(response.data);
+    } catch (error) {
+      console.error('Error searching employees', error);
+    }
+  };
+
+  return (
+    <div className="container">
+      <h3>Employee Directory</h3>
+      <input type="text" onChange={(e) => handleSearch(e.target.value)} placeholder="Search by name..." />
+      {showForm && (
+        <div>
+          <hr />
+          <p className="h4 mb-4">Update Employee</p>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              submitUpdate(employeeForm.EmployeeID, employeeForm);
+            }}
+          >
+            <input type="hidden" value={employeeForm.EmployeeID} />
+            <input
+              type="text"
+              value={employeeForm.FirstName}
+              onChange={(event) => setEmployeeForm({ ...employeeForm, FirstName: event.target.value })}
+              className="form-control mb-4 col-4"
+              placeholder="First Name"
+            />
+            <input
+              type="text"
+              value={employeeForm.LastName}
+              onChange={(event) => setEmployeeForm({ ...employeeForm, LastName: event.target.value })}
+              className="form-control mb-4 col-4"
+              placeholder="Last Name"
+            />
+            <input
+              type="text"
+              value={employeeForm.Email}
+              onChange={(event) => setEmployeeForm({ ...employeeForm, Email: event.target.value })}
+              className="form-control mb-4 col-4"
+              placeholder="Email"
+            />
+            <button type="submit" className="btn btn-info col-2">Save</button>
+          </form>
+        </div>
+      )}
+      <GridComponent dataSource={employees} allowPaging={true} editSettings={{ allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Dialog' }} toolbar={['Add', 'Edit', 'Delete', 'Update', 'Cancel']} actionComplete={handleUpdate}>
+        <ColumnsDirective>
+          <ColumnDirective field='EmployeeID' headerText='Employee ID' isPrimaryKey={true} width='130' />
+          <ColumnDirective field='FirstName' headerText='First Name' width='230' />
+          <ColumnDirective field='LastName' headerText='Last Name' width='170' />
+          <ColumnDirective field='Email' headerText='Email' width='230' />
+          <ColumnDirective headerText='Manage Records' commands={[{ type: 'Edit', buttonOption: { cssClass: 'btn btn-info btn-sm', iconCss: ' e-icons e-edit', click: handleUpdate } }, { type: 'Delete', buttonOption: { cssClass: 'btn btn-danger btn-sm', iconCss: ' e-icons e-delete', click: handleDelete } }]} width='150' textAlign='Center' />
+        </ColumnsDirective>
+        <Inject services={[Page, Edit, Toolbar, CommandColumn]} />
+      </GridComponent>
+    </div>
+  );
+}
+
+export default EmployeeList;
+
+This code creates a `GridComponent` with columns for each field in your employee data. The `allowPaging` prop is set to `true` to enable pagination. The `editSettings` prop is set to allow adding, editing, and deleting records. The `toolbar` prop is set to show the Add, Edit, Delete, Update, and Cancel buttons in the toolbar.
+
+The `handleUpdate` and `handleDelete` functions are passed as click handlers to the Edit and Delete buttons in the command column. These functions are called with the employee record as the argument when the buttons are clicked.
+
+The `handleSearch` function is called when the value of the search input changes. It fetches the employees that match the search keyword and updates the state.
+
+This code includes the handleUpdate and submitUpdate functions and the form for updating an employee's details. The handleUpdate function is called when the Edit button in the grid is clicked. It finds the employee to update, sets the employeeForm state variable to the employee's data, and shows the form. The submitUpdate function is called when the form is submitted. It sends a PUT request to update the employee, fetches the updated list of employees, and hides the form.
+
+
+t2do:
+1. **Setup a proxy for API calls**: In your React project, you can setup a proxy to forward API calls to your Spring Boot backend. This can be done by adding a `proxy` field to your `package.json` file like this:
+
+```json
+"proxy": "http://localhost:8080"
+
+2. **Update your Spring Boot application**: You'll need to update your Spring Boot application to serve the static files generated by your React application. This can be done by moving the build output of your React application (usually located in the `build` or `dist` directory) to the `static` directory of your Spring Boot application.
+
+3. **Handle CORS**: Since your frontend and backend are running on different origins, you'll need to handle CORS (Cross-Origin Resource Sharing) in your Spring Boot application. This can be done by adding a CORS configuration to your Spring Boot application.
+
+4. **Update your API endpoints**: You'll need to update your Spring Boot application to return JSON data instead of Thymeleaf views. This can be done by using `@RestController` instead of `@Controller` and returning data directly from your controller methods.
+
+Remember, this is a high-level overview of the steps you need to follow. Each step involves a fair amount of work and might require additional configuration based on your specific needs.
+
+The error message you're seeing is related to Cross-Origin Resource Sharing (CORS), a security feature that prevents a web page from making requests to a different domain than the one from which it came.
+
+In your case, your frontend application (running on `http://localhost:5173`) is trying to access your backend application (running on `http://localhost:8080`), which is considered a different domain.
+
+To fix this issue, you need to configure your backend server to allow CORS from your frontend application. Since you're using Spring Boot, you can do this by adding a `@CrossOrigin` annotation in your controller class.
+
+Here's an example:
+
+```java
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+
+@CrossOrigin(origins = "http://localhost:5173")
+@RestController
+public class EmployeeController {
+    // your controller methods
+}
+```
+
+This will allow your frontend application running on `http://localhost:5173` to access the endpoints in `EmployeeController`.
+
+Please note that allowing all origins, methods, and headers, as in `@CrossOrigin(origins = "*", allowedHeaders = "*", methods = "*")`, is not recommended in a production environment due to security concerns. You should only allow specific origins, methods, and headers that you trust.
+
+The error message indicates that the request to `http://localhost:8080/login` is being blocked due to CORS policy. This is likely because your backend server at `http://localhost:8080` is not set up to accept cross-origin requests from your frontend at `http://localhost:5173`.
+
+However, there's another issue here. The request is being redirected from `http://localhost:5173/employees/list` to `http://localhost:8080/login`. This suggests that your backend server is expecting some form of authentication that isn't being provided.
+
+If your backend server uses a form of authentication (like session or token-based authentication), you'll need to ensure that your frontend application provides the necessary credentials. This could be in the form of an authentication token in the request headers, or a session cookie.
+
+If you're not intending to implement authentication at this stage, you'll need to modify your backend server to not redirect unauthenticated requests to `/login`.
+
+As for the CORS issue, you've already added the `@CrossOrigin` annotation to your `EmployeeController`. However, if you have a login controller or security configuration that handles the `/login` path, you'll need to ensure that CORS is properly configured there as well. 
+
+Here's an example of how you can do this in a Spring Security configuration:
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and() // Enable CORS
+            // Your other security configurations
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Allow frontend origin
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+}
+```
+
+This will enable CORS for all paths (`/**`) in your application, allowing requests from `http://localhost:5173`.
+
+Yes, the `BootstrapAppData` class in your Spring Boot application is creating three users (`kiran`, `vinay`, and `ramesh`) with the password `welcome` (which is then encoded using a `PasswordEncoder`). 
+
+These users are saved into your database when the application starts up, due to the `@EventListener(ApplicationReadyEvent.class)` annotation. This means that these users and their credentials should be available for login once the application has started.
+
+Here are the users and their roles:
+
+- `kiran` has the `ROLE_USER` role.
+- `vinay` has the `ROLE_USER` and `ROLE_ADMIN` roles.
+- `ramesh` has the `ROLE_USER`, `ROLE_ADMIN`, and `ROLE_SUPER_ADMIN` roles.
+
+Please note that the actual password stored in the database is not `welcome`, but a hashed version of `welcome`, because of the use of `PasswordEncoder`. When you try to login, you should use `welcome` as the password, and Spring Security will hash this input and compare it with the hashed password in the database.
