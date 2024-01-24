@@ -1,21 +1,28 @@
 package com.abj.EmpMgmtSys.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+// import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import com.abj.EmpMgmtSys.model.BlacklistedToken;
+import com.abj.EmpMgmtSys.repository.BlacklistedTokenRepository;
 
 @Component
 public class JwtBlacklist {
 
-    private Set<String> blacklist = Collections.synchronizedSet(new HashSet<>());
+    @Autowired
+    private BlacklistedTokenRepository blacklistedTokenRepository;
 
     public void add(String token) {
-        blacklist.add(token);
+        BlacklistedToken blacklistedToken = new BlacklistedToken();
+        blacklistedToken.setToken(token);
+        blacklistedTokenRepository.save(blacklistedToken);
     }
 
     public boolean contains(String token) {
-        return blacklist.contains(token);
+        if (token == null) {
+            return false;
+        }
+        return blacklistedTokenRepository.findById(token).isPresent();
     }
 }

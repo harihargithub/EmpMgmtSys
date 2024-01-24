@@ -29,6 +29,10 @@ public class BootstrapAppData {
 	@Transactional
 	public void loadUsers(ApplicationReadyEvent event) {
 
+		if (userJpaRepository.count() > 0) {
+			return;
+		}
+
 		// addding users and roles
 
 		User kiran = new User("kiran", this.passwordEncoder.encode("welcome"));

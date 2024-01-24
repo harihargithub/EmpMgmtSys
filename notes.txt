@@ -23,6 +23,34 @@ PS C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmpMgmt
 
 To use this `EmployeeForm.jsx` in your application, you would need to set up a build process to transpile the JSX to JavaScript. This could be done using a tool like Babel and Webpack. Once the JSX is transpiled to JavaScript, you can include it in your HTML file using a `<script>` tag.
 
+To debug the `DomainUserDetailsService` class in your Spring Boot application, you can use the debugging tools provided by your IDE (like IntelliJ IDEA or Eclipse). Here are the general steps:
+
+1. **Set a Breakpoint:** In the `loadUserByUsername` method, set a breakpoint at the line where `userRepository.findByUsername(username)` is called. This is where the user details are loaded from the database.
+
+2. **Start the Application in Debug Mode:** Run your application in debug mode. This is usually done by clicking on the debug icon in your IDE.
+
+3. **Trigger the Method:** Make a request to your application that triggers the `loadUserByUsername` method. This could be a login request or any request that requires authentication.
+
+4. **Inspect the Variables:** Once the execution hits the breakpoint, you can inspect the variables in your IDE's debug window. You can check the `username` argument and the result of `userRepository.findByUsername(username)`.
+
+5. **Step Over/Into the Code:** Use the "Step Over" and "Step Into" features of your debugger to execute the code line by line. This allows you to see exactly what happens when the `DomainUserDetails` object is created and when the `UsernameNotFoundException` is thrown.
+
+6. **Check the User Roles:** The roles of the user are likely part of the `User` or `DomainUserDetails` object. Inspect these objects to see if the roles are correctly loaded.
+
+Remember to remove or disable the breakpoint once you're done debugging. Leaving a breakpoint can cause your application to pause unexpectedly.
+
+If you're not familiar with the debugging tools in your IDE, you might want to check out the documentation or some tutorials. Debugging is a powerful skill that can help you understand and fix issues in your code.
+
+
+https://ej2.syncfusion.com/react/demos/#/material3/grid/normal-edit
+This sample demonstrates CRUD operations in Grid. You can perform CRUD operations as follows,
+
+Add - To add new record, click Add toolbar button
+Edit - To edit record, double click a row or click toolbar Edit button after selected a row
+Delete - To delete record, click toolbar Delete button after selected a row
+Update,Cancel - You can save or discard changes by click toolbar Update and cancel button respectively
+By default, a new row will be added at the top of the grid. You can change it by setting editSettings.newRowPosition as Bottom
+
 Here's an example of how you might include the transpiled `EmployeeForm.js` in your HTML:
 
 ```html

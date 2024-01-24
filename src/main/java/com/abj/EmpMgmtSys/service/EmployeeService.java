@@ -11,6 +11,8 @@ public interface EmployeeService {
 
 	Set<Employee> fetchAll();
 
+	// List<Employee> getAllEmployees();
+
 	Employee findEmployeeById(long id);
 
 	Employee updateEmployeeById(long employeeId, Employee employee);
@@ -20,7 +22,7 @@ public interface EmployeeService {
 	Set<Employee> searchEmployees(String keyword);
 
 	List<Employee> getAllEmployeesSortedByFirstName();
-	
-	 List<Employee> getAllEmployeesSortedByFirstNameDesc();
+
+	List<Employee> getAllEmployeesSortedByFirstNameDesc();
 
 }

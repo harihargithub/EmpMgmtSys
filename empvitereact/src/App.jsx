@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import ConxApp from './ConxApp';
 import EmployeeList from './EmployeeList';
@@ -9,15 +9,11 @@ function App() {
 
   return (
     <Router>
+      {isLoggedIn && <Logout setLoggedIn={setLoggedIn} />}
       <Routes>
-        {isLoggedIn ? (
-          <>
-            <Route path="/emplist" element={<EmployeeList />} />
-            <Route path="/logout" element={<Logout setLoggedIn={setLoggedIn} />} />
-          </>
-        ) : (
-          <Route path="/login" element={<ConxApp setLoggedIn={setLoggedIn} />} />
-        )}
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/emplist" element={<EmployeeList />} />
+        <Route path="/login" element={<ConxApp isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />} />
       </Routes>
     </Router>
   );

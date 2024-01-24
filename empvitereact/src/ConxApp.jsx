@@ -12,21 +12,39 @@ function ConxApp({ setLoggedIn, isLoggedIn }) {  // Use isLoggedIn prop
     event.preventDefault();
 
     try {
+      console.log('Sending login request');
       const response = await axios.post('/login', { username, password });
       console.log('Login response', response);
 
-      const token = response.data.token;
+      // Get the token from the response
+      const token = response.data.jwt;
 
-      if (!token) {
-        console.error('No token in response');
-        return;
+      // Check if the token is undefined
+      if (token === undefined) {
+        console.error('Token is undefined');
+      } else {
+        console.log('Token:', token);
       }
 
+      // Set the token in local storage
       localStorage.setItem('token', token);
       console.log('Token stored in local storage');
+
+      // Set the Authorization header for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      console.log('Authorization header set');
+
       setLoggedIn(true);
+      console.log('setLoggedIn called with true');
     } catch (error) {
       console.error('Error logging in', error);
+
+      // Check if the error response status is 401
+      if (error.response && error.response.status === 401) {
+        console.log('401 response received');
+        setLoggedIn(false);
+        console.log('setLoggedIn called with false');
+      }
     }
   };
 

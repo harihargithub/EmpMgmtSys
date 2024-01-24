@@ -6,7 +6,20 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/employees': {
+      '/employees/list': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
+      '/employees/save': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      },
+      '/employees/update/:id': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/employees\/update/, '')
+      },
+      '/employees/delete': {
         target: 'http://localhost:8080',
         changeOrigin: true
       },

@@ -1,5 +1,6 @@
 package com.abj.EmpMgmtSys.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -7,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class DomainUserDetails implements UserDetails {
+public class DomainUserDetails implements UserDetails, Serializable {
 
 	private User user;
 
@@ -43,13 +44,11 @@ public class DomainUserDetails implements UserDetails {
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

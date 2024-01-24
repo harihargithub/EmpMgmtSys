@@ -7,6 +7,7 @@ import { registerLicense } from '@syncfusion/ej2-base';
 // Registering Syncfusion license key
 registerLicense('ORg4AjUWIQA/Gnt2UVhhQlVFfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5SdkFhW3xecXxUQWdb');
 
+console.log('Executing main.jsx');
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

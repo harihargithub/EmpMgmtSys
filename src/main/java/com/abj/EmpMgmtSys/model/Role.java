@@ -1,5 +1,6 @@
 package com.abj.EmpMgmtSys.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,8 +24,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(exclude = "users")
 @NoArgsConstructor
-
-public class Role {
+public class Role implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
