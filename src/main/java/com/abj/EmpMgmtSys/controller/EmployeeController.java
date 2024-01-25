@@ -45,7 +45,9 @@ public class EmployeeController {
 	}
 
 	@PutMapping("/update/{id}")
-	public Employee updateEmployee(@PathVariable int id, @RequestBody Employee updatedEmployee) {
+	public Employee updateEmployee(@PathVariable long id, @RequestBody Employee updatedEmployee) {
+		logger.info("Received update request for employee with ID: {}", id);
+
 		return employeeService.updateEmployeeById(id, updatedEmployee);
 	}
 

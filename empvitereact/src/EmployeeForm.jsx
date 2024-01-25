@@ -1,10 +1,10 @@
 import  { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EmployeeForm = () => {
     const [employee, setEmployee] = useState({ id: '', firstName: '', lastName: '', email: '' });
-    const history = useHistory();
+    const navigate = useNavigate();
     const { id } = useParams();
 
     useEffect(() => {
@@ -43,7 +43,7 @@ const EmployeeForm = () => {
                 // Add new employee
                 await axios.post('/employees/save', employee, config);
             }
-            history.push('/employees/list');
+            navigate('/employees/list');
         } catch (error) {
             console.error('Error saving data: ', error);
             alert('Error saving data');
@@ -56,7 +56,7 @@ const EmployeeForm = () => {
             <hr />
             <p className="h4 mb-4">Save Employee</p>
             <form onSubmit={handleSubmit}>
-                <input type="hidden" value={employee.id} />
+                <input type="hidden" name="id" defaultValue={employee.id} />
 
                 <input type="text" name="firstName" value={employee.firstName} onChange={handleInputChange} className="form-control mb-4 col-4" placeholder="First Name" />
 
