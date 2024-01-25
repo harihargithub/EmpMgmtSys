@@ -2,8 +2,13 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { GridComponent, ColumnsDirective, ColumnDirective, Inject, Page, Edit, Toolbar, Selection } from '@syncfusion/ej2-react-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
+import Logout from './Logout';
+import PropTypes from 'prop-types';
 
-function EmployeeList() {
+// EmployeeList component
+
+
+function EmployeeList({ isLoggedIn, setLoggedIn }) {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const gridInstance = useRef(null);
@@ -12,6 +17,11 @@ function EmployeeList() {
     { text: 'Top', value: 'Top' },
     { text: 'Bottom', value: 'Bottom' }
   ];
+
+  EmployeeList.propTypes = {
+    isLoggedIn: PropTypes.bool.isRequired,
+    setLoggedIn: PropTypes.func.isRequired,
+  };
 
   const getEmployees = useCallback(async () => {
     try {
@@ -30,16 +40,27 @@ function EmployeeList() {
   }, [getEmployees]);
 
   const actionComplete = async (args) => {
+    const token = localStorage.getItem('token'); // Get the token from local storage
+    const config = {
+      headers: { Authorization: `Bearer ${token}` } // Set the token in the headers
+    };
+
     if (args.requestType === 'save') {
       if (args.action === 'add') {
+        // Check if all the necessary fields are filled out
+        if (!args.data.FirstName || !args.data.LastName || !args.data.Email) {
+          console.error('All fields must be filled out');
+          return;
+        }
+
         try {
-          await axios.post('/employees/save', args.data);
+          await axios.post('/employees/save', args.data, config);
         } catch (error) {
           console.error('Error adding employee', error);
         }
       } else if (args.action === 'edit') {
         try {
-          await axios.put(`/employees/update/${args.data.id}`, args.data);
+          await axios.put(`/employees/update/${args.data.id}`, args.data, config);
         } catch (error) {
           console.error('Error updating employee', error);
         }
@@ -47,9 +68,9 @@ function EmployeeList() {
       getEmployees();
     } else if (args.requestType === 'delete') {
       const id = args.data[0].id;
-    console.log('Deleting employee with ID:', id);
+      console.log('Deleting employee with ID:', id);
       try {
-        await axios.post(`/employees/delete?id=${id}`);
+        await axios.post(`/employees/delete?id=${id}`, {}, config);
       } catch (error) {
         console.error('Error deleting employee', error);
       }
@@ -67,6 +88,7 @@ function EmployeeList() {
 
   return (
     <div className='control-pane'>
+{isLoggedIn && <Logout setLoggedIn={setLoggedIn} />}
       <div className='control-section'>
         <div className='col-md-9'>
           <GridComponent dataSource={employees} ref={gridInstance} toolbar={['Add', 'Edit', 'Delete', 'Update', 'Cancel']} allowPaging={true} editSettings={{ allowEditing: true, allowAdding: true, allowDeleting: true, newRowPosition: 'Top' }} actionComplete={actionComplete}>

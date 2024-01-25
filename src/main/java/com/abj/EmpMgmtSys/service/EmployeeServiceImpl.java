@@ -33,11 +33,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public Employee updateEmployeeById(long employeeId, Employee employee) {
-		Employee employeeFromRepository = this.findEmployeeById(employeeId);
-		employeeFromRepository.setFirstName(employee.getFirstName());
-		employeeFromRepository.setLastName(employee.getLastName());
-		employeeFromRepository.setEmail(employee.getEmail());
-		return this.employeeJpaRepository.save(employeeFromRepository);
+		Employee existingEmployee = this.findEmployeeById(employeeId);
+		if (existingEmployee == null) {
+			throw new IllegalArgumentException("Invalid Employee Id");
+		}
+		existingEmployee.setFirstName(employee.getFirstName());
+		existingEmployee.setLastName(employee.getLastName());
+		existingEmployee.setEmail(employee.getEmail());
+		return this.employeeJpaRepository.save(existingEmployee);
 	}
 
 	@Override
@@ -54,10 +57,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public List<Employee> getAllEmployeesSortedByFirstName() {
 		return employeeJpaRepository.findByOrderByFirstNameAsc();
 	}
-	
+
 	@Override
-    public List<Employee> getAllEmployeesSortedByFirstNameDesc() {
-        return employeeJpaRepository.findAllByOrderByFirstNameDesc();
-    }
+	public List<Employee> getAllEmployeesSortedByFirstNameDesc() {
+		return employeeJpaRepository.findAllByOrderByFirstNameDesc();
+	}
 
 }

@@ -1,43 +1,76 @@
-import React from 'react';
+import  { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
-class EmployeeForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            id: '',
-            firstName: '',
-            lastName: '',
-            email: ''
+const EmployeeForm = () => {
+    const [employee, setEmployee] = useState({ id: '', firstName: '', lastName: '', email: '' });
+    const navigate = useNavigate();
+    const { id } = useParams();
+
+    useEffect(() => {
+        if (id) {
+            axios.get(`/employees/${id}`)
+                .then(response => {
+                    setEmployee(response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data: ', error);
+                    alert('Error fetching data');
+                });
+        }
+    }, [id]);
+
+    const handleInputChange = (event) => {
+        setEmployee({
+            ...employee,
+            [event.target.name]: event.target.value
+        });
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const token = localStorage.getItem('token'); // Get the token from local storage
+        const config = {
+            headers: { Authorization: `Bearer ${token}` } // Set the token in the headers
         };
-    }
 
-    // Add methods to handle form submission and input changes...
+        try {
+            if (employee.id) {
+                // Update existing employee
+                await axios.put(`/employees/update/${employee.id}`, employee, config);
+            } else {
+                // Add new employee
+                await axios.post('/employees/save', employee, config);
+            }
+            navigate('/employees/list');
+        } catch (error) {
+            console.error('Error saving data: ', error);
+            alert('Error saving data');
+        }
+    };
 
-    render() {
-        return (
-            <div className="container">
-                <h3>Employee Directory</h3>
-                <hr />
-                <p className="h4 mb-4">Save Employee</p>
-                <form action="#">
-                    <input type="hidden" value={this.state.id} />
+    return (
+        <div className="container">
+            <h3>Employee Directory</h3>
+            <hr />
+            <p className="h4 mb-4">Save Employee</p>
+            <form onSubmit={handleSubmit}>
+                <input type="hidden" name="id" defaultValue={employee.id} />
 
-                    <input type="text" value={this.state.firstName} className="form-control mb-4 col-4" placeholder="First Name" />
+                <input type="text" name="firstName" value={employee.firstName} onChange={handleInputChange} className="form-control mb-4 col-4" placeholder="First Name" />
 
-                    <input type="text" value={this.state.lastName} className="form-control mb-4 col-4" placeholder="Last Name" />
+                <input type="text" name="lastName" value={employee.lastName} onChange={handleInputChange} className="form-control mb-4 col-4" placeholder="Last Name" />
 
-                    <input type="text" value={this.state.email} className="form-control mb-4 col-4" placeholder="Email" />
+                <input type="text" name="email" value={employee.email} onChange={handleInputChange} className="form-control mb-4 col-4" placeholder="Email" />
 
-                    <button type="submit" className="btn btn-info col-2">Save</button>
-                </form>
+                <button type="submit" className="btn btn-info col-2">Save</button>
+            </form>
 
-                <hr />
-                <a href="/employees/list">Back to Employees List</a>
-            </div>
-        );
-    }
-}
+            <hr />
+            <a href="/employees/list">Back to Employees List</a>
+        </div>
+    );
+};
 
 export default EmployeeForm;
-
-// Need to inlcude methods for handling form submission or input changes @EmployeeForm.jsx to make the form functional. Also need to handle the form submission in your React application instead of submitting the form to the server directly.

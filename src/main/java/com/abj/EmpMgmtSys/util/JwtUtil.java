@@ -38,7 +38,7 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetails userDetails) {
-        final long JWT_TOKEN_VALIDITY = 3 * 60; // 3 minutes
+        final long JWT_TOKEN_VALIDITY = 3 * 60 * 60; // 3 minutes
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
                 .setClaims(claims)
