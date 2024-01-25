@@ -1,5 +1,10 @@
 PS C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmployeeManagmentSystem> conda deactivate if (base) xx
 
+http://localhost:8081/employees/showFormForUpdate - update employee
+http://localhost:8081/employees/form?  - add new employee
+http://localhost:8081/employees/search?keyword=gd
+
+
 only following App works not above:
 PS C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmpMgmtSys> conda deactivate if (base)
  -> mvn clean install 

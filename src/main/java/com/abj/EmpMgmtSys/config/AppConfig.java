@@ -70,17 +70,18 @@ public class AppConfig {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authorizeRequests()
 				.antMatchers("/login", "/loginPage*").permitAll() // Allow unauthenticated access to /login and
-				// /loginPage endpoints
+																	// /loginPage endpoints
 				.antMatchers("/authenticate/**").permitAll() // Only allow unauthenticated access to the login endpoint
 				.antMatchers("/employees/list", "/employees/form").hasAnyRole("USER", "ADMIN") // Only allow users with
-				// USER or ADMIN roles
-				// to access these
-				// endpoints
+																								// USER or ADMIN roles
+																								// to access these
+																								// endpoints
 				.antMatchers("/employees/list").permitAll()
-				.antMatchers(HttpMethod.POST, "/employees/save").hasRole("ADMIN") // Only allow users with ADMIN role to
+				.antMatchers(HttpMethod.POST, "/employees/save").permitAll()
 				// access this endpoint
-				.antMatchers("/employees/delete").hasRole("SUPER_ADMIN") // Only allow users with SUPER_ADMIN role to
+				.antMatchers(HttpMethod.PUT, "/employees/update/**").permitAll()
 				// access this endpoint
+				.antMatchers("/employees/delete").permitAll() // Allow all requests to /employees/delete
 				.antMatchers("/logout").authenticated() // Ensure authenticated access to /logout
 				.anyRequest().authenticated() // Require authentication for all other endpoints
 				.and()
