@@ -38,7 +38,7 @@ const EmployeeForm = () => {
         try {
             if (employee.id) {
                 // Update existing employee
-                await axios.put(`/employees/update/${employee.id}`, employee, config);
+                await axios.put(`/employees/update?id=${employee.id}`, employee, config);
             } else {
                 // Add new employee
                 await axios.post('/employees/save', employee, config);

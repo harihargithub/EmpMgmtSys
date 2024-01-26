@@ -82,7 +82,7 @@ public class AppConfig {
 				.antMatchers("/employees/list").permitAll()
 				.antMatchers(HttpMethod.POST, "/employees/save").permitAll()
 				// access this endpoint
-				.antMatchers("/employees/update").permitAll()
+				.antMatchers(HttpMethod.PUT, "/employees/update").permitAll()
 				// access this endpoint
 				.antMatchers("/employees/delete").permitAll() // Allow all requests to /employees/delete
 				.antMatchers("/logout").authenticated() // Ensure authenticated access to /logout

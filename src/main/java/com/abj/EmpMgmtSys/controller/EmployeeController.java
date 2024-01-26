@@ -45,10 +45,10 @@ public class EmployeeController {
 	}
 
 	@PutMapping("/update")
-	public Employee updateEmployee(@RequestParam("id") long id, @RequestBody Employee updatedEmployee) {
-		logger.info("Received update request for employee with ID: {}", id);
+	public Employee updateEmployee(@RequestParam("id") long employeeId, @RequestBody Employee updatedEmployee) {
+		logger.info("Received update request for employee with ID: {}", employeeId);
 
-		return employeeService.updateEmployeeById(id, updatedEmployee);
+		return employeeService.updateEmployeeById(employeeId, updatedEmployee);
 	}
 
 	@PostMapping("/delete")
