@@ -72,14 +72,17 @@ public class AppConfig {
 				.antMatchers("/login", "/loginPage*").permitAll() // Allow unauthenticated access to /login and
 																	// /loginPage endpoints
 				.antMatchers("/authenticate/**").permitAll() // Only allow unauthenticated access to the login endpoint
-				.antMatchers("/employees/list", "/employees/form").hasAnyRole("USER", "ADMIN") // Only allow users with
-																								// USER or ADMIN roles
-																								// to access these
-																								// endpoints
+				.antMatchers("/employees/list", "/employees/form").hasAnyRole("USER", "ADMIN", "SUPER_ADMIN") // Only
+																												// allow
+																												// users
+																												// with
+				// USER or ADMIN roles
+				// to access these
+				// endpoints
 				.antMatchers("/employees/list").permitAll()
 				.antMatchers(HttpMethod.POST, "/employees/save").permitAll()
 				// access this endpoint
-				.antMatchers(HttpMethod.PUT, "/employees/update/**").permitAll()
+				.antMatchers(HttpMethod.PUT, "/employees/update").permitAll()
 				// access this endpoint
 				.antMatchers("/employees/delete").permitAll() // Allow all requests to /employees/delete
 				.antMatchers("/logout").authenticated() // Ensure authenticated access to /logout

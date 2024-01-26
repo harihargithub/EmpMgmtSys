@@ -17,7 +17,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public Employee saveEmployee(Employee employee) {
-		return this.employeeJpaRepository.save(employee);
+		if (employee != null) {
+			return this.employeeJpaRepository.save(employee);
+		} else {
+			// Handle the case where the employee is null
+			// You could throw an exception or return null, depending on your use case
+			throw new IllegalArgumentException("Employee cannot be null");
+		}
 	}
 
 	@Override

@@ -52,16 +52,31 @@ function EmployeeList({ isLoggedIn, setLoggedIn }) {
           console.error('All fields must be filled out');
           return;
         }
-
+      
+        // Prepare the data to be sent
+        const employeeData = {
+          firstName: args.data.FirstName,
+          lastName: args.data.LastName,
+          email: args.data.Email
+        };
+      
         try {
-          await axios.post('/employees/save', args.data, config);
+          console.log('Sending data:', employeeData);
+          await axios.post('/employees/save', employeeData, config);
         } catch (error) {
           console.error('Error adding employee', error);
         }
-      } else if (args.action === 'edit') {
+      } else if (args.requestType === 'beginEdit' || args.action === 'edit') {
+        const id = args.data.id;
+        // Prepare the data to be sent
+        const employeeData = {
+          firstName: args.data.FirstName,
+          lastName: args.data.LastName,
+          email: args.data.Email
+        };
+        console.log('Updating employee with ID:', id, 'with data:', employeeData, 'using token:', token);
         try {
-          await axios.put(`/employees/update/${args.data.id}`, args.data, config);
-        } catch (error) {
+          await axios.put(`/employees/update?id=${id}`, employeeData, config);        } catch (error) {
           console.error('Error updating employee', error);
         }
       }

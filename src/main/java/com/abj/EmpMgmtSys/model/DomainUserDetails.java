@@ -1,6 +1,6 @@
 package com.abj.EmpMgmtSys.model;
 
-import java.io.Serializable;
+// import java.io.Serializable;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class DomainUserDetails implements UserDetails, Serializable {
+public class DomainUserDetails implements UserDetails {
 
 	private User user;
 

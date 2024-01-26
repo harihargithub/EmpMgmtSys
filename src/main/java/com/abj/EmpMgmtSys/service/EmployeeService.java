@@ -13,7 +13,7 @@ public interface EmployeeService {
 
 	// List<Employee> getAllEmployees();
 
-	Employee findEmployeeById(long id);
+	Employee findEmployeeById(long employeeId);
 
 	Employee updateEmployeeById(long employeeId, Employee employee);
 

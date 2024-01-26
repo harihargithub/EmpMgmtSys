@@ -4,6 +4,28 @@ http://localhost:8081/employees/showFormForUpdate - update employee
 http://localhost:8081/employees/form?  - add new employee
 http://localhost:8081/employees/search?keyword=gd
 
+It seems like you're using PowerShell, which has its own `curl` alias for the `Invoke-WebRequest` cmdlet, and it doesn't support the same syntax as the `curl` command in Unix-like systems.
+
+You can use the following PowerShell equivalent of your curl command:
+
+```powershell
+Invoke-RestMethod -Uri http://localhost:5173/employees/update/64 -Method Put -Body '{"firstName":"hks","lastName":"hs","email":"vj@hk.com"}' -ContentType 'application/json'
+```
+with token:
+ PS C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\ems_springboot_react_vite_mysql_sf\EmpMgmtSys_sboot_vite_react_mysql_sf\empvitereact> $headers = @{
+>>     'Content-Type' = 'application/json'
+>>     'Authorization' = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW1lc2giLCJleHAiOjE3MDYxODkwMDksImlhdCI6MTcwNjE3ODIwOX0.0MhbkPADkj-JiscT2u8QANLdosyThgb_8y3oc_RSnYnPTra7xTF0mo0zRkqL2MbItx5zJAXlN5WnNNk_DjOGEA'
+>> }
+(base) PS C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\ems_springboot_react_vite_mysql_sf\EmpMgmtSys_sboot_vite_react_mysql_sf\empvitereact>
+(base) PS C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\ems_springboot_react_vite_mysql_sf\EmpMgmtSys_sboot_vite_react_mysql_sf\empvitereact> Invoke-RestMethod -Uri http://localhost:5173/employees/update/64 -Method Put -Body '{"firstName":"hks","lastName":"hs","email":"vj@hk.com"}' -Headers $headers
+
+
+
+This command does the same thing as your curl command: it sends a PUT request to the `/employees/update/64` endpoint with a JSON body. The `-Uri` parameter specifies the URL, the `-Method` parameter specifies the HTTP method, the `-Body` parameter specifies the request body, and the `-ContentType` parameter sets the `Content-Type` header to `application/json`.
+
+
+curl -X PUT -H "Content-Type: application/json" -d '{"firstName":"hks","lastName":"hs","email":"vj@hk.com"}' http://localhost:5173/employees/update/64
+
 
 only following App works not above:
 PS C:\Users\nhari\Documents\workspace-spring-tool-suite-4-4.19.0.RELEASE\EmpMgmtSys> conda deactivate if (base)

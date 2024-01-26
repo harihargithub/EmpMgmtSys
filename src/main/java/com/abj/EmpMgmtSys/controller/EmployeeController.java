@@ -44,11 +44,11 @@ public class EmployeeController {
 		return this.employeeService.saveEmployee(employee);
 	}
 
-	@PutMapping("/update/{id}")
-	public Employee updateEmployee(@PathVariable long id, @RequestBody Employee updatedEmployee) {
-		logger.info("Received update request for employee with ID: {}", id);
+	@PutMapping("/update")
+	public Employee updateEmployee(@RequestParam("id") long employeeId, @RequestBody Employee updatedEmployee) {
+		logger.info("Received update request for employee with ID: {}", employeeId);
 
-		return employeeService.updateEmployeeById(id, updatedEmployee);
+		return employeeService.updateEmployeeById(employeeId, updatedEmployee);
 	}
 
 	@PostMapping("/delete")
