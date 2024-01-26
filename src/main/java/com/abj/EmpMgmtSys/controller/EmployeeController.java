@@ -44,8 +44,8 @@ public class EmployeeController {
 		return this.employeeService.saveEmployee(employee);
 	}
 
-	@PutMapping("/update/{id}")
-	public Employee updateEmployee(@PathVariable long id, @RequestBody Employee updatedEmployee) {
+	@PutMapping("/update")
+	public Employee updateEmployee(@RequestParam("id") long id, @RequestBody Employee updatedEmployee) {
 		logger.info("Received update request for employee with ID: {}", id);
 
 		return employeeService.updateEmployeeById(id, updatedEmployee);

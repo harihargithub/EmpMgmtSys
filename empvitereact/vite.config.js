@@ -17,7 +17,7 @@ export default defineConfig({
       '/employees/update/:id': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/employees\/update/, '')
+        rewrite: (path) => path
       },
       '/employees/delete': {
         target: 'http://localhost:8080',

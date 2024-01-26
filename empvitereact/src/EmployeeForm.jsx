@@ -56,7 +56,7 @@ const EmployeeForm = () => {
             <hr />
             <p className="h4 mb-4">Save Employee</p>
             <form onSubmit={handleSubmit}>
-                <input type="hidden" name="id" defaultValue={employee.id} />
+                <input type="hidden" name="id" value={employee.id} />
 
                 <input type="text" name="firstName" value={employee.firstName} onChange={handleInputChange} className="form-control mb-4 col-4" placeholder="First Name" />
 
