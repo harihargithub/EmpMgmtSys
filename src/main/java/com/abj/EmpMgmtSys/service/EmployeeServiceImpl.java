@@ -32,20 +32,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Employee findEmployeeById(long id) {
-		return this.employeeJpaRepository.findById(id)
+	public Employee findEmployeeById(long employeeId) {
+		return this.employeeJpaRepository.findById(employeeId)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid Employee Id"));
 	}
 
 	@Override
-	public Employee updateEmployeeById(long employeeId, Employee employee) {
+	public Employee updateEmployeeById(long employeeId, Employee updatedEmployee) {
 		Employee existingEmployee = this.findEmployeeById(employeeId);
-		if (existingEmployee == null) {
-			throw new IllegalArgumentException("Invalid Employee Id");
-		}
-		existingEmployee.setFirstName(employee.getFirstName());
-		existingEmployee.setLastName(employee.getLastName());
-		existingEmployee.setEmail(employee.getEmail());
+		existingEmployee.setFirstName(updatedEmployee.getFirstName());
+		existingEmployee.setLastName(updatedEmployee.getLastName());
+		existingEmployee.setEmail(updatedEmployee.getEmail());
 		return this.employeeJpaRepository.save(existingEmployee);
 	}
 

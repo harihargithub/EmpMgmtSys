@@ -1,11 +1,12 @@
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { registerLicense } from '@syncfusion/ej2-base';
 
-// Registering Syncfusion license key
-registerLicense('ORg4AjUWIQA/Gnt2UVhhQlVFfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5SdkFhW3xecXxUQWdb');
+// .env - VITE_SYNCFUSION_LICENSE_KEY='Your SF Licence Key'
+registerLicense(import.meta.env.VITE_SYNCFUSION_LICENSE_KEY);
 
 console.log('Executing main.jsx');
 
