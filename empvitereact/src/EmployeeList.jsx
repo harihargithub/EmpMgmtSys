@@ -76,7 +76,7 @@ function EmployeeList({ isLoggedIn, setLoggedIn }) {
         };
         console.log('Updating employee with ID:', id, 'with data:', employeeData, 'using token:', token);
         try {
-          await axios.put(`/employees/update?id=${id}`, employeeData, config);        } catch (error) {
+          await axios.put(`/employees/update`, { ...employeeData, id }, config);        } catch (error) {
           console.error('Error updating employee', error);
         }
       }

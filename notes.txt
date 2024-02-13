@@ -21,6 +21,7 @@ with token:
 
 
 
+
 This command does the same thing as your curl command: it sends a PUT request to the `/employees/update/64` endpoint with a JSON body. The `-Uri` parameter specifies the URL, the `-Method` parameter specifies the HTTP method, the `-Body` parameter specifies the request body, and the `-ContentType` parameter sets the `Content-Type` header to `application/json`.
 
 
@@ -890,3 +891,56 @@ Here are the users and their roles:
 - `ramesh` has the `ROLE_USER`, `ROLE_ADMIN`, and `ROLE_SUPER_ADMIN` roles.
 
 Please note that the actual password stored in the database is not `welcome`, but a hashed version of `welcome`, because of the use of `PasswordEncoder`. When you try to login, you should use `welcome` as the password, and Spring Security will hash this input and compare it with the hashed password in the database.
+
+
+From the output of your PATH environment variable, it appears that the path to the `bin` directory of your Maven installation (`C:\Users\nhari\OneDrive\Documents\iitr gl apcifsd\Spring mvc maven\maven apache-maven-3.9.2\bin`) is correctly included. 
+
+However, the error message you're seeing (`'mvn' is not recognized as the name of a cmdlet, function, script file, or operable program`) typically indicates that the system cannot find the `mvn` command. 
+
+This could be due to a few reasons:
+
+1. **Maven is not correctly installed**: Even though the path to the `bin` directory of Maven is included in the PATH, there might be a problem with the Maven installation itself. You can check this by navigating to the `bin` directory (`C:\Users\nhari\OneDrive\Documents\iitr gl apcifsd\Spring mvc maven\maven apache-maven-3.9.2\bin`) in your file explorer and checking if the `mvn` command is present.
+
+2. **The PATH is not correctly set up**: There might be a typo in the PATH or the order of the directories in the PATH might be causing problems. You can check this by carefully reviewing the PATH. 
+
+3. **The changes to the PATH have not taken effect**: If you've recently added Maven to the PATH, you might need to restart your terminal or your computer for the changes to take effect.
+
+4. **There's a problem with your PowerShell setup**: If you're only seeing this error in PowerShell, there might be a problem with your PowerShell setup. You can check this by trying to run the `mvn` command in a different shell (like Command Prompt or Git Bash). If the command works in other shells, the problem is likely with your PowerShell setup.
+
+reinstalled onedrive and now the location is -
+PS C:\Users\nhari\OneDrive070224\OneDrive\Documents\iitr gl apcifsd\Spring mvc maven\maven apache-maven-3.9.2\bin> dir
+
+
+    Directory: C:\Users\nhari\OneDrive070224\OneDrive\Documents\iitr gl apcifsd\Spring mvc maven\maven
+    apache-maven-3.9.2\bin
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---l        11-06-2023     09:35            327 m2.conf
+-a---l        11-06-2023     09:35           5883 mvn
+-a---l        11-06-2023     09:35           6324 mvn.cmd
+-a---l        11-06-2023     09:35           1684 mvnDebug
+-a---l        11-06-2023     09:35           2169 mvnDebug.cmd
+-a---l        11-06-2023     09:35           1611 mvnyjp
+
+
+PS C:\Users\nhari\OneDrive070224\OneDrive\Documents\iitr gl apcifsd\Spring mvc maven\maven apache-maven-3.9.2\bin>
+
+Great! Now that you have reinstalled Maven and the `mvn` command is present in the `bin` directory, you need to update your PATH environment variable to reflect the new location.
+
+The new path to add to your PATH environment variable is:
+
+```plaintext
+C:\Users\nhari\OneDrive070224\OneDrive\Documents\iitr gl apcifsd\Spring mvc maven\maven apache-maven-3.9.2\bin
+```
+
+Here's how you can do this:
+
+1. Open the System Properties (right-click on Computer > Properties > Advanced system settings > Environment Variables).
+2. In the System variables section, find the PATH variable, select it, and click Edit.
+3. In the Edit Environment Variable window, click New and add the new path.
+4. Click OK on all windows to save the changes.
+
+After you've done this, open a new terminal window (the existing windows won't pick up the changes) and type `mvn -v` again. If the setup is correct, you should now see information about the installed Maven version. If you still see an error message, there might be a problem with your Maven installation. In this case, it might be best to uninstall Maven and install it again.
+
