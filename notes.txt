@@ -1025,3 +1025,6 @@ This configuration will forward all PUT requests from `/employees/update` in you
 
 
 
+
+We have reviewed your query about update operation using PUT is throwing 404 error. We have analyzed the grid rendering code and noticed that you are performing CRUD operation in the actionComplete event of the grid and based on the grid action updating the state variable which is set to the grid. Currently we are validating the issue by running the server code from our end. We need some more time to validate this issue. We will provide an update on or before January 31st, 2024. Till then we appreciate your patience and understanding.
+

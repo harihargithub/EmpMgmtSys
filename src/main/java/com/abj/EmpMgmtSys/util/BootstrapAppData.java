@@ -61,6 +61,10 @@ public class BootstrapAppData {
 	@Transactional
 	public void loadEmployees(ApplicationReadyEvent event) {
 
+		if (employeeRepository.count() >= 10) {
+			return;
+		}
+
 		Employee emp1 = new Employee();
 		emp1.setFirstName("Johny");
 		emp1.setLastName("Meir");
