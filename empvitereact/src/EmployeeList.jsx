@@ -2,13 +2,13 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { GridComponent, ColumnsDirective, ColumnDirective, Inject, Page, Edit, Toolbar, Selection } from '@syncfusion/ej2-react-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
-import Logout from './Logout';
+// import Logout from './Logout';
 import PropTypes from 'prop-types';
 
 // EmployeeList component
 
 
-function EmployeeList({ isLoggedIn, setLoggedIn }) {
+function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const gridInstance = useRef(null);
@@ -103,7 +103,6 @@ function EmployeeList({ isLoggedIn, setLoggedIn }) {
 
   return (
     <div className='control-pane'>
-{isLoggedIn && <Logout setLoggedIn={setLoggedIn} />}
       <div className='control-section'>
         <div className='col-md-9'>
           <GridComponent dataSource={employees} ref={gridInstance} toolbar={['Add', 'Edit', 'Delete', 'Update', 'Cancel']} allowPaging={true} editSettings={{ allowEditing: true, allowAdding: true, allowDeleting: true, newRowPosition: 'Top' }} actionComplete={actionComplete}>

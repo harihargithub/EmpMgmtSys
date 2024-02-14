@@ -67,7 +67,8 @@ function ConxApp({ setLoggedIn, isLoggedIn }) {  // Use isLoggedIn prop
           <button type="submit">Login</button>
         </form>
       ) : (
-        <Logout setLoggedIn={setLoggedIn} />
+        /* <Logout setLoggedIn={setLoggedIn} /> */
+        <h2>Welcome back!</h2>
       )}
     </div>
   );

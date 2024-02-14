@@ -944,3 +944,84 @@ Here's how you can do this:
 
 After you've done this, open a new terminal window (the existing windows won't pick up the changes) and type `mvn -v` again. If the setup is correct, you should now see information about the installed Maven version. If you still see an error message, there might be a problem with your Maven installation. In this case, it might be best to uninstall Maven and install it again.
 
+
+The issue seems to be with the way you're making the PUT request in your `EmployeeList.jsx` file. You're appending the `id` as a query parameter in the URL, but in your `EmployeeController`, you're expecting it as a `@RequestParam`.
+
+In your `EmployeeController`, you have:
+
+```java
+@PutMapping("/update")
+public Employee updateEmployee(@RequestParam("id") long employeeId, @RequestBody Employee updatedEmployee) {
+    logger.info("Received update request for employee with ID: {}", employeeId);
+    return employeeService.updateEmployeeById(employeeId, updatedEmployee);
+}
+```
+
+In your `EmployeeList.jsx`, you have:
+
+```javascript
+await axios.put(`/employees/update?id=${id}`, employeeData, config);
+```
+
+The `axios.put` method sends a PUT request to the specified URL. The second argument is the data to be sent as the request body, and the third argument is the config options for the request.
+
+The issue is that the `id` is being sent as a query parameter in the URL, but your `EmployeeController` is expecting it as a `@RequestParam`. 
+
+To fix this, you can change your `axios.put` call to include the `id` in the request body along with the `employeeData`, like so:
+
+```javascript
+await axios.put(`/employees/update`, { ...employeeData, id }, config);
+```
+
+This will include the `id` in the request body, which should allow your `EmployeeController` to receive it correctly. 
+
+Please note that you will also need to modify your `EmployeeController` to accept `id` from the request body:
+
+```java
+@PutMapping("/update")
+public Employee updateEmployee(@RequestBody Employee updatedEmployee) {
+    logger.info("Received update request for employee with ID: {}", updatedEmployee.getId());
+    return employeeService.updateEmployeeById(updatedEmployee.getId(), updatedEmployee);
+}
+```
+
+In this case, `getId()` method should be present in your `Employee` model to get the `id`.
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+// ...
+
+public class EmployeeController {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
+    // ...
+
+    @PutMapping("/update")
+    public Employee updateEmployee(@RequestBody Employee updatedEmployee) {
+        logger.info("Received update request for employee with ID: {}", updatedEmployee.getId());
+        Employee result = employeeService.updateEmployeeById(updatedEmployee.getId(), updatedEmployee);
+        logger.info("Update result: {}", result);
+        return result;
+    }
+}
+
+The issue seems to be with the proxy configuration for the `/employees/update/:id` route in your `vite.config.js` file. 
+
+The `:id` in the route suggests that the ID of the employee to be updated should be part of the URL. However, in your `EmployeeController`, the update endpoint is defined as `/update` and the ID is expected to be part of the request body, not the URL.
+
+You should update the proxy configuration for the `/employees/update/:id` route to match the endpoint defined in your `EmployeeController`. Here's how you can do it:
+
+```javascript
+'/employees/update': {
+  target: 'http://localhost:8080',
+  changeOrigin: true,
+  rewrite: (path) => path
+},
+```
+
+This configuration will forward all PUT requests from `/employees/update` in your frontend to `http://localhost:8080/employees/update` in your backend, which should match the update endpoint in your `EmployeeController`.
+
+
+
